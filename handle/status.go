@@ -31,6 +31,7 @@ func InitParams(c *gin.Context) {
 		c.JSON(400, &Rsp{Success: false, Message: err.Error()})
 		return
 	}
+	
 	if encrypt.Sha([]byte(encrypt.Sha([]byte(p.Url+p.Url[5:]))+"大傻逼")) != p.License {
 		c.JSON(400, &Rsp{Success: false})
 		return
