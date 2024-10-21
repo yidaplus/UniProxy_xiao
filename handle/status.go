@@ -10,6 +10,7 @@ import (
 	"github.com/wyx2685/UniProxy/conf"
 	"github.com/wyx2685/UniProxy/proxy"
 	"github.com/wyx2685/UniProxy/v2b"
+	"github.com/wyx2685/UniProxy/common/encrypt"
 )
 
 type initParamsRequest struct {
@@ -28,6 +29,10 @@ func InitParams(c *gin.Context) {
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
 		c.JSON(400, &Rsp{Success: false, Message: err.Error()})
+		return
+	}
+	if encrypt.Sha([]byte(encrypt.Sha([]byte(p.Url+p.Url[5:]))+"大傻逼")) != p.License {
+		c.JSON(400, &Rsp{Success: false})
 		return
 	}
 	f, err := os.OpenFile(path.Join(p.UserPath, "uniproxy.log"), os.O_TRUNC|os.O_RDWR|os.O_CREATE, 0755)
